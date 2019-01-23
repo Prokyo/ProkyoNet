@@ -12,5 +12,13 @@
 	<artifactId>prokyo-net-client</artifactId>
 	<name>Client</name>
 
+	<dependencies>
+		<dependency>
+			<groupId>de.prokyo.network</groupId>
+			<artifactId>prokyo-net-common</artifactId>
+			<version>0.1</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 </project>
