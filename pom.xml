@@ -7,6 +7,7 @@
 	<groupId>de.prokyo.network</groupId>
 	<artifactId>prokyo-net</artifactId>
 	<version>0.1</version>
+	<packaging>pom</packaging>
 	<description>ProkyoNet is a wrapper for Netty providing a simple and high performance API.</description>
 	<url>https://github.com/Prokyo/ProkyoNet</url>
 
@@ -33,6 +34,12 @@
 		<developerConnection>scm:git:ssh://github.com:Prokyo/ProkyoNet</developerConnection>
 		<url>https://github.com/Prokyo/ProkyoNet/tree/master</url>
 	</scm>
+
+	<modules>
+		<module>common</module>
+		<module>server</module>
+		<module>client</module>
+	</modules>
 
 	<dependencies>
 		<dependency>
