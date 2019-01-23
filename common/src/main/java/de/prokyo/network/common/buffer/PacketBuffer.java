@@ -2,6 +2,7 @@ package de.prokyo.network.common.buffer;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.util.ByteProcessor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +26,25 @@ public class PacketBuffer extends ByteBuf {
 	private final ByteBuf buffer;
 
 	/**
-	 * Constructs a new Packet Buffer.
+	 * Constructs a new Packet Buffer.<br>
+	 *
+	 * The initial capacity is 4.
+	 */
+	public PacketBuffer() {
+		this(4);
+	}
+
+	/**
+	 * Constructs a new Packet Buffer.<br>
+	 *
+	 * @param initialCapacity The initial capacity of the packet buffer.
+	 */
+	public PacketBuffer(int initialCapacity) {
+		this(Unpooled.directBuffer(initialCapacity));
+	}
+
+	/**
+	 * Constructs a new Packet Buffer.<br>
 	 *
 	 * @param buffer The internal {@link ByteBuf} of the packet buffer.
 	 */
