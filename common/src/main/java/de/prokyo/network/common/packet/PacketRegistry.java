@@ -36,7 +36,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Registers the given packet including it's class and packet id.<br>
+	 * Registers the given packet including its class and packet id.<br>
 	 *
 	 * @param clazz The class of the packet<br>
 	 * @param packetId The packet id
@@ -50,7 +50,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Unregisters the given packet via it's class.<br>
+	 * Unregisters the given packet via its class.<br>
 	 *
 	 * @param clazz The class of the packet
 	 */
@@ -60,7 +60,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Unregisters the given packet via it's packet id.<br>
+	 * Unregisters the given packet via its packet id.<br>
 	 *
 	 * @param packetId The packet id
 	 */
