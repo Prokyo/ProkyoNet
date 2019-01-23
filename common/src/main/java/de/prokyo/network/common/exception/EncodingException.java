@@ -12,7 +12,7 @@ public class EncodingException extends RuntimeException {
 	}
 
 	/**
-	 * Constructor<br>
+	 * Constructor
 	 *
 	 * @param msg The message containing important information for the user
 	 */
@@ -21,7 +21,7 @@ public class EncodingException extends RuntimeException {
 	}
 
 	/**
-	 * Constructor<br>
+	 * Constructor
 	 *
 	 * @param msg The message containing important information for the user<br>
 	 * @param throwable The original throwable instance this exception will be a wrapper for

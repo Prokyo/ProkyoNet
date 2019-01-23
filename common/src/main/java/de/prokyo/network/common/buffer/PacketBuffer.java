@@ -35,7 +35,7 @@ public class PacketBuffer extends ByteBuf {
 	}
 
 	/**
-	 * Constructs a new Packet Buffer.<br>
+	 * Constructs a new Packet Buffer.
 	 *
 	 * @param initialCapacity The initial capacity of the packet buffer.
 	 */
@@ -44,7 +44,7 @@ public class PacketBuffer extends ByteBuf {
 	}
 
 	/**
-	 * Constructs a new Packet Buffer.<br>
+	 * Constructs a new Packet Buffer.
 	 *
 	 * @param buffer The internal {@link ByteBuf} of the packet buffer.
 	 */
