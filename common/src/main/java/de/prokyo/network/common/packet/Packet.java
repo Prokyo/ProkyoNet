@@ -8,14 +8,14 @@ import de.prokyo.network.common.buffer.PacketBuffer;
 public interface Packet {
 
 	/**
-	 * Encodes the information and writes it to the given buffer.
+	 * Encodes the information and writes it to the given buffer.<br>
 	 *
 	 * @param buffer A packet buffer which will contain the encoded data
 	 */
 	void encode(PacketBuffer buffer);
 
 	/**
-	 * Decodes the information of the given buffer and sets it to the variables of the implementation.
+	 * Decodes the information of the given buffer and sets it to the variables of the implementation.<br>
 	 *
 	 * @param buffer A packet buffer containing the encoded data
 	 */

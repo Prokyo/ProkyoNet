@@ -17,7 +17,7 @@ public class PacketRegistry {
 	private final Map<Integer, Class<? extends Packet>> packetIdToClass;
 
 	/**
-	 * Constructor
+	 * Constructor<br>
 	 *
 	 * The maps will be instantiated with concurrent implementations.
 	 */
@@ -26,7 +26,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor<br>
 	 *
 	 * @param concurrentMaps Whether concurrent maps shall be used
 	 */
@@ -36,9 +36,9 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Registers the given packet including it's class and packet id.
+	 * Registers the given packet including it's class and packet id.<br>
 	 *
-	 * @param clazz The class of the packet
+	 * @param clazz The class of the packet<br>
 	 * @param packetId The packet id
 	 */
 	public void register(Class<? extends Packet> clazz, Integer packetId) {
@@ -50,7 +50,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Unregisters the given packet via it's class.
+	 * Unregisters the given packet via it's class.<br>
 	 *
 	 * @param clazz The class of the packet
 	 */
@@ -60,7 +60,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Unregisters the given packet via it's packet id.
+	 * Unregisters the given packet via it's packet id.<br>
 	 *
 	 * @param packetId The packet id
 	 */
@@ -71,9 +71,9 @@ public class PacketRegistry {
 
 	/**
 	 * Gets the corresponding packet id of the given class. <br>
-	 * If the given class is unregistered, the error code -404 will be returned.
+	 * If the given class is unregistered, the error code -404 will be returned.<br>
 	 *
-	 * @param clazz The corresponding packet class of the wanted packet id
+	 * @param clazz The corresponding packet class of the wanted packet id<br>
 	 * @return The packet id (id >= 0) or an error code (-404 = not found).
 	 */
 	public int getPacketId(Class<? extends Packet> clazz) {
@@ -84,9 +84,9 @@ public class PacketRegistry {
 
 	/**
 	 * Gets the corresponding packet class of the given packet id. <br>
-	 * If the given packet id is unregistered/unknown, <i>null</i> will be returned.
+	 * If the given packet id is unregistered/unknown, <i>null</i> will be returned.<br>
 	 *
-	 * @param packetId The corresponding packet id of the wanted class
+	 * @param packetId The corresponding packet id of the wanted class<br>
 	 * @return The packet class or null if there is no class for this id.
 	 */
 	public Class<? extends Packet> getPacketClass(int packetId) {
@@ -94,12 +94,12 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Creates a new instance of the corresponding class.
+	 * Creates a new instance of the corresponding class.<br>
 	 *
-	 * @param packetId The packet id
-	 * @param <T> The type of the packet
-	 * @return A new instance of <i>T</i>.
-	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.
+	 * @param packetId The packet id<br>
+	 * @param <T> The type of the packet<br>
+	 * @return A new instance of <i>T</i>.<br>
+	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.<br>
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
 	 */
 	public <T> T newInstance(int packetId) throws InstantiationException, IllegalAccessException {
@@ -107,12 +107,12 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Creates a new instance of the given class.
+	 * Creates a new instance of the given class.<br>
 	 *
-	 * @param clazz The packet class
-	 * @param <T> The type of the packet defined by the given class
-	 * @return A new instance of <i>T</i>.
-	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.
+	 * @param clazz The packet class<br>
+	 * @param <T> The type of the packet defined by the given class<br>
+	 * @return A new instance of <i>T</i>.<br>
+	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.<br>
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
 	 */
 	public <T> T newInstance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
