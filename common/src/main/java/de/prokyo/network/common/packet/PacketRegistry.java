@@ -98,7 +98,7 @@ public class PacketRegistry {
 	 *
 	 * @param packetId The packet id<br>
 	 * @param <T> The type of the packet<br>
-	 * @return A new instance of <i>T</i>.<br>
+	 * @return A new instance of <i>T</i> or null if the packet is unknown.<br>
 	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.<br>
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
 	 */
@@ -111,11 +111,12 @@ public class PacketRegistry {
 	 *
 	 * @param clazz The packet class<br>
 	 * @param <T> The type of the packet defined by the given class<br>
-	 * @return A new instance of <i>T</i>.<br>
+	 * @return A new instance of <i>T</i> or null if the given class is null.<br>
 	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.<br>
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
 	 */
 	public <T> T newInstance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
+		if(clazz == null) return null;
 		return clazz.newInstance();
 	}
 
