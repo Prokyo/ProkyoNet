@@ -20,7 +20,7 @@ import io.netty.util.AttributeKey;
 public class ProkyoClient implements Connection {
 
 	private Channel channel;
-	private static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
+	public static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
 
 	/**
 	 * Connects to the given host and port with given amount of threads.<br>
@@ -50,15 +50,10 @@ public class ProkyoClient implements Connection {
 
 		Bootstrap bootstrap = new Bootstrap()
 				.group(group)
-				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class);
-
-		this.channel.pipeline()
-				.addFirst("prokyoEncoder", new PacketEncoder())
-				.addFirst("prokyoDecoder", new PacketDecoder());
+				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class)
+				.handler(new ProkyoClientInitializer());
 
 		this.channel = bootstrap.connect(host, port).sync().channel();
-
-		this.channel.attr(ProkyoClient.ATTRIBUTE_KEY);
 	}
 
 	@Override
