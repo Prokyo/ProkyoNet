@@ -3,7 +3,9 @@ package de.prokyo.network.common.packet;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -12,9 +14,22 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PacketRegistry {
 
 	@Getter private static final PacketRegistry instance = new PacketRegistry();
+	@Getter private static final byte prokyoProtocolVersion = 0x01;
+
+	static {
+		/**
+		 * These are reserved packets.
+		 * Reserved packets are the only packets with negative packet numbers, so the whole negative
+		 * number space is reserved for this kind of packet.
+		 */
+		instance.registerPacket(KeepAlivePacket.class, -0x01);
+		instance.registerPacket(VersionPacket.class, -0x02);
+	}
 
 	private final Map<Class<? extends Packet>, Integer> classToPacketId;
 	private final Map<Integer, Class<? extends Packet>> packetIdToClass;
+	private final Set<Class<? extends Packet>> reservedPacketClasses = new HashSet<>();
+	private final Set<Integer> reservedPacketIds = new HashSet<>();
 
 	/**
 	 * Constructor<br>
@@ -45,8 +60,23 @@ public class PacketRegistry {
 		if(packetId < 0) throw new IllegalArgumentException("The packet's id cannot be lower than zero.");
 		if(clazz == null) throw new IllegalArgumentException("The class cannot be null");
 
+		this.registerPacket(clazz, packetId);
+	}
+
+	/**
+	 * Registers the given packet including its class and packet id without validating the arguments.<br>
+	 *
+	 * @param clazz The class of the packet<br>
+	 * @param packetId The packet id
+	 */
+	private void registerPacket(Class<? extends Packet> clazz, Integer packetId) {
 		this.classToPacketId.put(clazz, packetId);
 		this.packetIdToClass.put(packetId, clazz);
+
+		if(packetId < 0) { // Should be a reserved packet
+			this.reservedPacketClasses.add(clazz);
+			this.reservedPacketIds.add(packetId);
+		}
 	}
 
 	/**
@@ -91,6 +121,26 @@ public class PacketRegistry {
 	 */
 	public Class<? extends Packet> getPacketClass(int packetId) {
 		return this.packetIdToClass.get(packetId);
+	}
+
+	/**
+	 * Returns whether the packet id belongs to a reserved packet or not.
+	 *
+	 * @param packetId The packet id
+	 * @return Whether the packet id belongs to a reserved packet or not.
+	 */
+	public boolean isReservedPacket(int packetId) {
+		return this.reservedPacketIds.contains(packetId);
+	}
+
+	/**
+	 * Returns whether the packet class belongs to a reserved packet or not.
+	 *
+	 * @param clazz The packet class
+	 * @return Whether the packet class belongs to a reserved packet or not.
+	 */
+	public boolean isReservedPacket(Class<? extends Packet> clazz) {
+		return this.reservedPacketClasses.contains(clazz);
 	}
 
 	/**

@@ -19,7 +19,8 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 
 		int packetId = PacketRegistry.getInstance().getPacketId(packet.getClass());
 		if(packetId == -404) throw new EncodingException("The class " + packet.getClass() + " is not registered as a packet.");
-		if(packetId < 0) throw new EncodingException("A packet id can't be lower than zero.");
+		if(packetId < 0 && !PacketRegistry.getInstance().isReservedPacket(packetId))
+			throw new EncodingException("A packet id can't be lower than zero.");
 
 		buffer.writeInt(packetId);
 		packet.encode(buffer);
