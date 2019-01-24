@@ -12,6 +12,7 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.AttributeKey;
 
 /**
  * Represents a client connection to a remote host.
@@ -19,6 +20,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class ProkyoClient implements Connection {
 
 	private Channel channel;
+	private static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
 
 	/**
 	 * Connects to the given host and port with given amount of threads.<br>
@@ -46,14 +48,17 @@ public class ProkyoClient implements Connection {
 		boolean epoll = Epoll.isAvailable();
 		EventLoopGroup group = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 
-		Bootstrap bootstrap = new Bootstrap().group(group)
+		Bootstrap bootstrap = new Bootstrap()
+				.group(group)
 				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class);
-
-		this.channel = bootstrap.connect(host, port).sync().channel();
 
 		this.channel.pipeline()
 				.addFirst("prokyoEncoder", new PacketEncoder())
 				.addFirst("prokyoDecoder", new PacketDecoder());
+
+		this.channel = bootstrap.connect(host, port).sync().channel();
+
+		this.channel.attr(ProkyoClient.ATTRIBUTE_KEY);
 	}
 
 	@Override
