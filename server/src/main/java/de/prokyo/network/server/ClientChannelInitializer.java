@@ -16,7 +16,7 @@ public class ClientChannelInitializer extends ChannelInitializer<SocketChannel> 
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
 		ch.pipeline().addLast("timeout", new ReadTimeoutHandler(30))
-				.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4))
+				.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
 				.addLast("prokyoDecoder", new PacketDecoder())
 				.addLast("frame-prepender", new LengthFieldPrepender(4))
 				.addLast("prokyoEncoder", new PacketEncoder());
