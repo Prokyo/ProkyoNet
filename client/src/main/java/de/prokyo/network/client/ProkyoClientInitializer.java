@@ -8,6 +8,9 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 
+/**
+ * Initializes the client connection.
+ */
 public class ProkyoClientInitializer extends ChannelInitializer {
 
 	@Override
