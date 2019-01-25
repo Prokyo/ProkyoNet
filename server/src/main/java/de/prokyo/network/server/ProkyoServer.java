@@ -8,6 +8,7 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import java.net.InetSocketAddress;
 import lombok.Getter;
 
 /**
@@ -15,6 +16,7 @@ import lombok.Getter;
  */
 public class ProkyoServer {
 
+	private InetSocketAddress localHost;
 	@Getter private final EventManager eventManager = new EventManager();
 
 	/**
@@ -40,13 +42,14 @@ public class ProkyoServer {
 	 * @throws InterruptedException If the thread is interrupted by another thread.
 	 */
 	public void start(String host, int port, int threads) throws InterruptedException {
+		this.localHost = InetSocketAddress.createUnresolved(host, port);
 		boolean epoll = Epoll.isAvailable();
 		EventLoopGroup workerGroup = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 
 		ServerBootstrap serverBootstrap = new ServerBootstrap()
 				.group(workerGroup)
 				.channel(epoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
-				.localAddress(host, port);
+				.localAddress(this.localHost);
 
 		serverBootstrap.childHandler(new ClientChannelInitializer(this)).bind().sync();
 	}
