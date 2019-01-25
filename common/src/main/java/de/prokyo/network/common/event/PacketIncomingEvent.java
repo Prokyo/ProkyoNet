@@ -2,13 +2,13 @@ package de.prokyo.network.common.event;
 
 import de.prokyo.network.common.connection.Connection;
 import de.prokyo.network.common.packet.Packet;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Event that will be called when a packet is written to the pipeline. (flushing ignored)
+ * Event that will be called when an packet is read.
  */
-@Data
-public class OutgoingPacketEvent implements Event {
+@RequiredArgsConstructor
+public class PacketIncomingEvent implements Event {
 
 	private final Packet packet;
 	private final Connection connection;
