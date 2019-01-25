@@ -12,10 +12,7 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import lombok.Getter;
 
 /**
@@ -52,7 +49,7 @@ public class ProkyoClient implements Connection {
 	 * @throws InterruptedException If the thread is interrupted by another thread.
 	 */
 	public void connect(String host, int port, int threads) throws InterruptedException {
-		this.remoteHost = InetSocketAddress.createUnresolved(host, port);
+		this.remoteHost = new InetSocketAddress(host, port);
 		boolean epoll = Epoll.isAvailable();
 		EventLoopGroup group = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 
