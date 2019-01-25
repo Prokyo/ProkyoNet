@@ -1,9 +1,8 @@
 package de.prokyo.network.client;
 
 import de.prokyo.network.common.connection.Connection;
+import de.prokyo.network.common.event.EventManager;
 import de.prokyo.network.common.packet.Packet;
-import de.prokyo.network.common.pipeline.PacketDecoder;
-import de.prokyo.network.common.pipeline.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -13,6 +12,7 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
+import lombok.Getter;
 
 /**
  * Represents a client connection to a remote host.
@@ -21,6 +21,8 @@ public class ProkyoClient implements Connection {
 
 	private Channel channel;
 	public static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
+
+	@Getter private final EventManager eventManager = new EventManager();
 
 	/**
 	 * Connects to the given host and port with given amount of threads.<br>
@@ -51,7 +53,7 @@ public class ProkyoClient implements Connection {
 		Bootstrap bootstrap = new Bootstrap()
 				.group(group)
 				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class)
-				.handler(new ProkyoClientInitializer());
+				.handler(new ProkyoClientInitializer(this));
 
 		this.channel = bootstrap.connect(host, port).sync().channel();
 	}

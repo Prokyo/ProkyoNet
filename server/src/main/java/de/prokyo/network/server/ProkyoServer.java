@@ -1,5 +1,6 @@
 package de.prokyo.network.server;
 
+import de.prokyo.network.common.event.EventManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
@@ -7,11 +8,14 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.Getter;
 
 /**
  * Represents a server handling connections to clients.
  */
 public class ProkyoServer {
+
+	@Getter private final EventManager eventManager = new EventManager();
 
 	/**
 	 * Starts a server with the given host address and port with the given amount of threads.<br>
@@ -44,7 +48,7 @@ public class ProkyoServer {
 				.channel(epoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
 				.localAddress(host, port);
 
-		serverBootstrap.childHandler(new ClientChannelInitializer()).bind().sync();
+		serverBootstrap.childHandler(new ClientChannelInitializer(this)).bind().sync();
 	}
 
 }

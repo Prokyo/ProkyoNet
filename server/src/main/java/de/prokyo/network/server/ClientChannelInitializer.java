@@ -7,19 +7,25 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.timeout.ReadTimeoutHandler;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Class for initializing socket channels of clients.
  */
+@RequiredArgsConstructor
 public class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
+
+	private final ProkyoServer prokyoServer;
 
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
-		ch.pipeline().addLast("timeout", new ReadTimeoutHandler(30))
+		ch.pipeline()
+				.addLast("timeout", new ReadTimeoutHandler(30))
 				.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
 				.addLast("prokyoDecoder", new PacketDecoder())
 				.addLast("frame-prepender", new LengthFieldPrepender(4))
-				.addLast("prokyoEncoder", new PacketEncoder());
+				.addLast("prokyoEncoder", new PacketEncoder())
+				.addLast("prokyoPacketHandler", new ProkyoDuplexHandler(this.prokyoServer));
 
 		ClientConnection connection = new ClientConnection(ch);
 		ch.attr(ClientConnection.ATTRIBUTE_KEY).set(connection);
