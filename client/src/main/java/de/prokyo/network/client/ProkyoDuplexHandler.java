@@ -3,6 +3,7 @@ package de.prokyo.network.client;
 import de.prokyo.network.client.event.ConnectionClosedEvent;
 import de.prokyo.network.client.event.ConnectionEstablishedEvent;
 import de.prokyo.network.common.event.OutgoingPacketEvent;
+import de.prokyo.network.common.event.PacketIncomingEvent;
 import de.prokyo.network.common.packet.Packet;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,6 +34,7 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 
 		try {
 			this.prokyoClient.getEventManager().fire((Packet) msg);
+			this.prokyoClient.getEventManager().fire(new PacketIncomingEvent((Packet) msg, this.prokyoClient));
 		} finally {
 			super.channelRead(ctx, msg);
 		}
@@ -43,7 +45,7 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 		if (!(msg instanceof Packet)) return;
 
 		try {
-			this.prokyoClient.getEventManager().fire(new OutgoingPacketEvent((Packet) msg));
+			this.prokyoClient.getEventManager().fire(new OutgoingPacketEvent((Packet) msg, this.prokyoClient));
 		} finally {
 			super.write(ctx, msg, promise);
 		}
