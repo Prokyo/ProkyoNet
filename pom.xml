@@ -39,6 +39,7 @@
 		<module>common</module>
 		<module>server</module>
 		<module>client</module>
+		<module>unit-test</module>
 	</modules>
 
 	<dependencies>
@@ -72,13 +73,6 @@
 			<artifactId>netty-all</artifactId>
 			<version>4.1.32.Final</version>
 			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
