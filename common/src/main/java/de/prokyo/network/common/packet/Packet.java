@@ -1,11 +1,12 @@
 package de.prokyo.network.common.packet;
 
 import de.prokyo.network.common.buffer.PacketBuffer;
+import de.prokyo.network.common.event.Event;
 
 /**
  * Represents a packet containing a bunch of information.
  */
-public interface Packet {
+public interface Packet extends Event {
 
 	/**
 	 * Encodes the information and writes it to the given buffer.<br>
