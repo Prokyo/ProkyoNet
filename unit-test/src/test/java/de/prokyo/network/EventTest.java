@@ -1,4 +1,4 @@
-package de.prokyo.network.event;
+package de.prokyo.network;
 
 import de.prokyo.network.common.event.Event;
 import de.prokyo.network.common.event.EventHandler;
