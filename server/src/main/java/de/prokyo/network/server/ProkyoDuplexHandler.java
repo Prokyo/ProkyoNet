@@ -3,7 +3,7 @@ package de.prokyo.network.server;
 import de.prokyo.network.common.event.OutgoingPacketEvent;
 import de.prokyo.network.common.packet.Packet;
 import de.prokyo.network.server.event.ConnectionEstablishedEvent;
-import de.prokyo.network.server.event.ConnectionTimeoutEvent;
+import de.prokyo.network.server.event.ConnectionClosedEvent;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -24,7 +24,7 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		this.prokyoServer.getEventManager().fire(new ConnectionTimeoutEvent(ctx.channel().attr(ClientConnection.ATTRIBUTE_KEY).get()));
+		this.prokyoServer.getEventManager().fire(new ConnectionClosedEvent(ctx.channel().attr(ClientConnection.ATTRIBUTE_KEY).get()));
 	}
 
 	@Override

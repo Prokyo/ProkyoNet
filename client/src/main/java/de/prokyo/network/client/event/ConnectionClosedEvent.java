@@ -5,10 +5,10 @@ import de.prokyo.network.common.event.Event;
 import lombok.Data;
 
 /**
- * Event that will be called when a channel is inactive.
+ * Event that will be called when a connection is closed.
  */
 @Data
-public class ConnectionTimeoutEvent implements Event {
+public class ConnectionClosedEvent implements Event {
 
 	private final ProkyoClient prokyoClient;
 
