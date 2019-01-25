@@ -17,7 +17,7 @@ import lombok.Getter;
  */
 public class ProkyoServer {
 
-	private InetSocketAddress localHost;
+	@Getter private InetSocketAddress localHost;
 	@Getter private final EventManager eventManager = new EventManager();
 
 	/**
@@ -43,7 +43,7 @@ public class ProkyoServer {
 	 * @throws InterruptedException If the thread is interrupted by another thread.
 	 */
 	public void start(String host, int port, int threads) throws InterruptedException {
-		this.localHost = InetSocketAddress.createUnresolved(host, port);
+		this.localHost = new InetSocketAddress(host, port);
 		boolean epoll = Epoll.isAvailable();
 		EventLoopGroup workerGroup = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 

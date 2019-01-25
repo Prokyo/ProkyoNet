@@ -2,8 +2,8 @@ package de.prokyo.network.server;
 
 import de.prokyo.network.common.event.OutgoingPacketEvent;
 import de.prokyo.network.common.packet.Packet;
-import de.prokyo.network.server.event.ConnectionEstablishedEvent;
 import de.prokyo.network.server.event.ConnectionClosedEvent;
+import de.prokyo.network.server.event.ConnectionEstablishedEvent;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -29,16 +29,24 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if(!(msg instanceof Packet)) return;
+		if (!(msg instanceof Packet)) return;
 
-		this.prokyoServer.getEventManager().fire((Packet) msg);
+		try {
+			this.prokyoServer.getEventManager().fire((Packet) msg);
+		} finally {
+			super.channelRead(ctx, msg);
+		}
 	}
 
 	@Override
 	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-		if(!(msg instanceof Packet)) return;
+		if (!(msg instanceof Packet)) return;
 
-		this.prokyoServer.getEventManager().fire(new OutgoingPacketEvent((Packet) msg));
+		try {
+			this.prokyoServer.getEventManager().fire(new OutgoingPacketEvent((Packet) msg));
+		} finally {
+			super.write(ctx, msg, promise);
+		}
 	}
 
 }
