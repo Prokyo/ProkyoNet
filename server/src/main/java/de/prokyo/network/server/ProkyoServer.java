@@ -1,6 +1,7 @@
 package de.prokyo.network.server;
 
 import de.prokyo.network.common.event.EventManager;
+import de.prokyo.network.server.event.ServerStartEvent;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
@@ -52,6 +53,7 @@ public class ProkyoServer {
 				.localAddress(this.localHost);
 
 		serverBootstrap.childHandler(new ClientChannelInitializer(this)).bind().sync();
+		this.eventManager.fire(new ServerStartEvent(this));
 	}
 
 }
