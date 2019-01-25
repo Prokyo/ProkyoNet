@@ -12,6 +12,10 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import lombok.Getter;
 
 /**
@@ -20,6 +24,7 @@ import lombok.Getter;
 public class ProkyoClient implements Connection {
 
 	private Channel channel;
+	@Getter private InetSocketAddress remoteHost;
 	public static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
 
 	@Getter private final EventManager eventManager = new EventManager();
@@ -47,6 +52,7 @@ public class ProkyoClient implements Connection {
 	 * @throws InterruptedException If the thread is interrupted by another thread.
 	 */
 	public void connect(String host, int port, int threads) throws InterruptedException {
+		this.remoteHost = InetSocketAddress.createUnresolved(host, port);
 		boolean epoll = Epoll.isAvailable();
 		EventLoopGroup group = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 
@@ -55,7 +61,7 @@ public class ProkyoClient implements Connection {
 				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class)
 				.handler(new ProkyoClientInitializer(this));
 
-		this.channel = bootstrap.connect(host, port).sync().channel();
+		this.channel = bootstrap.connect(this.remoteHost).sync().channel();
 	}
 
 	@Override

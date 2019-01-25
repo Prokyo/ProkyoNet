@@ -2,6 +2,8 @@ package de.prokyo.network.server;
 
 import de.prokyo.network.common.event.OutgoingPacketEvent;
 import de.prokyo.network.common.packet.Packet;
+import de.prokyo.network.server.event.ConnectionEstablishedEvent;
+import de.prokyo.network.server.event.ConnectionClosedEvent;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -14,6 +16,16 @@ import lombok.RequiredArgsConstructor;
 public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 
 	private final ProkyoServer prokyoServer;
+
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		this.prokyoServer.getEventManager().fire(new ConnectionEstablishedEvent(ctx.channel().attr(ClientConnection.ATTRIBUTE_KEY).get()));
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		this.prokyoServer.getEventManager().fire(new ConnectionClosedEvent(ctx.channel().attr(ClientConnection.ATTRIBUTE_KEY).get()));
+	}
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
