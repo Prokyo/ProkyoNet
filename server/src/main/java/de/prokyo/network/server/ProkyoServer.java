@@ -17,8 +17,10 @@ import lombok.Getter;
  */
 public class ProkyoServer {
 
-	@Getter private InetSocketAddress localHost;
 	@Getter private final EventManager eventManager = new EventManager();
+	@Getter private InetSocketAddress localHost;
+	private EventLoopGroup workerGroup;
+	private boolean started;
 
 	/**
 	 * Starts a server with the given host address and port with the given amount of threads.<br>
@@ -45,15 +47,29 @@ public class ProkyoServer {
 	public void start(String host, int port, int threads) throws InterruptedException {
 		this.localHost = new InetSocketAddress(host, port);
 		boolean epoll = Epoll.isAvailable();
-		EventLoopGroup workerGroup = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		this.workerGroup = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 
 		ServerBootstrap serverBootstrap = new ServerBootstrap()
-				.group(workerGroup)
+				.group(this.workerGroup)
 				.channel(epoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
 				.localAddress(this.localHost);
 
 		serverBootstrap.childHandler(new ClientChannelInitializer(this)).bind().sync();
 		this.eventManager.fire(new ServerStartEvent(this));
+		this.started = true;
+	}
+
+	/**
+	 * Closes all connections synchronously.
+	 */
+	public void shutdown() {
+		if (this.started) {
+			try {
+				this.workerGroup.shutdownGracefully().sync();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

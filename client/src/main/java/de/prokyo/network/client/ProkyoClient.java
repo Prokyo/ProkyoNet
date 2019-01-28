@@ -20,11 +20,13 @@ import lombok.Getter;
  */
 public class ProkyoClient implements Connection {
 
+	public static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
+	@Getter private final EventManager eventManager = new EventManager();
 	private Channel channel;
 	@Getter private InetSocketAddress remoteHost;
-	public static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
+	private EventLoopGroup workerGroup;
+	private boolean connected;
 
-	@Getter private final EventManager eventManager = new EventManager();
 
 	/**
 	 * Connects to the given host and port with given amount of threads.<br>
@@ -51,19 +53,33 @@ public class ProkyoClient implements Connection {
 	public void connect(String host, int port, int threads) throws InterruptedException {
 		this.remoteHost = new InetSocketAddress(host, port);
 		boolean epoll = Epoll.isAvailable();
-		EventLoopGroup group = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		this.workerGroup = epoll ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 
 		Bootstrap bootstrap = new Bootstrap()
-				.group(group)
+				.group(this.workerGroup)
 				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class)
 				.handler(new ProkyoClientInitializer(this));
 
 		this.channel = bootstrap.connect(this.remoteHost).sync().channel();
+		this.connected = true;
 	}
 
 	@Override
 	public void sendPacket(Packet packet) {
 		this.channel.writeAndFlush(packet);
+	}
+
+	/**
+	 * Closes the connection synchronously.
+	 */
+	public void shutdown() {
+		if (this.connected) {
+			try {
+				this.workerGroup.shutdownGracefully().sync();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
