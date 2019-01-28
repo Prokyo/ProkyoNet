@@ -76,9 +76,20 @@ public class ProkyoClient implements Connection {
 		if (this.connected) {
 			try {
 				this.workerGroup.shutdownGracefully().sync();
+				this.connected = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Closes the connections asynchronously.
+	 */
+	public void shutdownAsync() {
+		if (this.connected) {
+			this.workerGroup.shutdownGracefully();
+			this.connected = false;
 		}
 	}
 
