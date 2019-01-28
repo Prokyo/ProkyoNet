@@ -66,9 +66,20 @@ public class ProkyoServer {
 		if (this.started) {
 			try {
 				this.workerGroup.shutdownGracefully().sync();
+				this.started = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Closes all connections asynchronously.
+	 */
+	public void shutdownAsync() {
+		if (this.started) {
+			this.workerGroup.shutdownGracefully();
+			this.started = false;
 		}
 	}
 
