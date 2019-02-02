@@ -28,7 +28,6 @@ public class PacketBuffer extends ByteBuf {
 
 	/**
 	 * Constructs a new Packet Buffer.<br>
-	 *
 	 * The initial capacity is 4.
 	 */
 	public PacketBuffer() {
@@ -55,11 +54,12 @@ public class PacketBuffer extends ByteBuf {
 
 	/**
 	 * Compresses the given <i>uncompressedData</i> and writes the compressed data to the buffer including<br>
-	 * the uncompressed size.<br>
-	 * First we write the uncompressed size as a VarInt followed by the size of the compressed data as a VarInt.<br>
-	 * After these initial values the compressed data will be written to the buffer.<br>
+	 * the uncompressed size.
 	 *
-	 * The {@link CompressionUtil} has to be initialized before calling this method - otherwise u will get a NPE.
+	 * <p>First we write the uncompressed size as a VarInt followed by the size of the compressed data as a VarInt.<br>
+	 * After these initial values the compressed data will be written to the buffer.</p>
+	 *
+	 * <p>The {@link CompressionUtil} has to be initialized before calling this method - otherwise u will get a NPE.</p>
 	 *
 	 * @param uncompressedData The uncompressed data
 	 * @return This
@@ -78,7 +78,7 @@ public class PacketBuffer extends ByteBuf {
 	 * Reads the initial values written by {@link PacketBuffer#compressAndWriteByteArray(byte[])}, reads the compressed<br>
 	 * data, decompresses the compressed data and returns the uncompressed data.<br>
 	 *
-	 * The {@link CompressionUtil} has to be initialized before calling this method - otherwise u will get a NPE.
+	 * <p>The {@link CompressionUtil} has to be initialized before calling this method - otherwise u will get a NPE.</p>
 	 *
 	 * @return The uncompressed data
 	 * @see PacketBuffer#readVarInt()
@@ -1309,4 +1309,5 @@ public class PacketBuffer extends ByteBuf {
 		this.buffer.touch(hint);
 		return this;
 	}
+
 }

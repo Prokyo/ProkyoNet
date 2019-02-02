@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Manages all kind of stuff related to events.<br>
- * This class is completly thread safe, but blocking while (un-)registering handlers.
+ * This class is completely thread safe, but blocking while (un-)registering handlers.
  */
 public class EventManager {
 
@@ -59,7 +59,7 @@ public class EventManager {
 	 */
 	public void fire(Event event) {
 		List<EventHandler<? extends Event>> handlers = this.eventClassToEventHandler.get(event.getClass());
-		if(handlers == null) return;
+		if (handlers == null) return;
 		for (int i = 0; i < handlers.size(); i++) {
 			((EventHandler) handlers.get(i)).handle(event);
 		}

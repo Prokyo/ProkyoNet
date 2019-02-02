@@ -49,7 +49,7 @@ public class CompressedConnectionTest {
 	@Test
 	@SneakyThrows
 	public void testConnection() {
-		PacketRegistry.getInstance().register(CompressionPingPacket.class, 0x01);
+		PacketRegistry.INSTANCE.register(CompressionPingPacket.class, 0x01);
 		CompressionUtil.init(CompressionUtil.CompressionType.LZ4_FASTEST);
 
 		this.server = new ProkyoServer();

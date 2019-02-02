@@ -21,7 +21,7 @@ public interface Connection {
 	 * Sends the version of the currently used ProkyoNet protocol (reserved packets).
 	 */
 	default void sendVersionInformation() {
-		this.sendPacket(new VersionPacket(PacketRegistry.getProkyoProtocolVersion()));
+		this.sendPacket(new VersionPacket(PacketRegistry.PROKYO_PROTOCOL_VERSION));
 	}
 
 }

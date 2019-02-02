@@ -1,7 +1,5 @@
 package de.prokyo.network.common.packet;
 
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,17 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PacketRegistry {
 
-	@Getter private static final PacketRegistry instance = new PacketRegistry();
-	@Getter private static final byte prokyoProtocolVersion = 0x01;
+	public static final PacketRegistry INSTANCE = new PacketRegistry();
+	public static final byte PROKYO_PROTOCOL_VERSION = 0x01;
 
 	static {
-		/**
+		/*
 		 * These are reserved packets.
 		 * Reserved packets are the only packets with negative packet numbers, so the whole negative
 		 * number space is reserved for this kind of packet.
 		 */
-		instance.registerPacket(KeepAlivePacket.class, -0x01);
-		instance.registerPacket(VersionPacket.class, -0x02);
+		INSTANCE.registerPacket(KeepAlivePacket.class, -0x01);
+		INSTANCE.registerPacket(VersionPacket.class, -0x02);
 	}
 
 	private final Map<Class<? extends Packet>, Integer> classToPacketId;
@@ -33,7 +31,6 @@ public class PacketRegistry {
 
 	/**
 	 * Constructor<br>
-	 *
 	 * The maps will be instantiated with concurrent implementations.
 	 */
 	public PacketRegistry() {
@@ -41,7 +38,7 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Constructor<br>
+	 * Constructor.
 	 *
 	 * @param concurrentMaps Whether concurrent maps shall be used
 	 */
@@ -51,72 +48,72 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Registers the given packet including its class and packet id.<br>
+	 * Registers the given packet including its class and packet id.
 	 *
-	 * @param clazz The class of the packet<br>
+	 * @param clazz The class of the packet
 	 * @param packetId The packet id
 	 */
 	public void register(Class<? extends Packet> clazz, Integer packetId) {
-		if(packetId < 0) throw new IllegalArgumentException("The packet's id cannot be lower than zero.");
-		if(clazz == null) throw new IllegalArgumentException("The class cannot be null");
+		if (packetId < 0) throw new IllegalArgumentException("The packet's id cannot be lower than zero.");
+		if (clazz == null) throw new IllegalArgumentException("The class cannot be null");
 
 		this.registerPacket(clazz, packetId);
 	}
 
 	/**
-	 * Registers the given packet including its class and packet id without validating the arguments.<br>
+	 * Registers the given packet including its class and packet id without validating the arguments.
 	 *
-	 * @param clazz The class of the packet<br>
+	 * @param clazz The class of the packet
 	 * @param packetId The packet id
 	 */
 	private void registerPacket(Class<? extends Packet> clazz, Integer packetId) {
 		this.classToPacketId.put(clazz, packetId);
 		this.packetIdToClass.put(packetId, clazz);
 
-		if(packetId < 0) { // Should be a reserved packet
+		if (packetId < 0) { // Should be a reserved packet
 			this.reservedPacketClasses.add(clazz);
 			this.reservedPacketIds.add(packetId);
 		}
 	}
 
 	/**
-	 * Unregisters the given packet via its class.<br>
+	 * Unregisters the given packet via its class.
 	 *
 	 * @param clazz The class of the packet
 	 */
 	public void unregister(Class<? extends Packet> clazz) {
-		if(clazz == null) throw new IllegalArgumentException("The class cannot be null");
+		if (clazz == null) throw new IllegalArgumentException("The class cannot be null");
 		this.packetIdToClass.remove(this.classToPacketId.remove(clazz));
 	}
 
 	/**
-	 * Unregisters the given packet via its packet id.<br>
+	 * Unregisters the given packet via its packet id.
 	 *
 	 * @param packetId The packet id
 	 */
 	public void unregister(Integer packetId) {
-		if(packetId < 0) throw new IllegalArgumentException("The packet's id cannot be lower than zero.");
+		if (packetId < 0) throw new IllegalArgumentException("The packet's id cannot be lower than zero.");
 		this.classToPacketId.remove(this.packetIdToClass.remove(packetId));
 	}
 
 	/**
-	 * Gets the corresponding packet id of the given class. <br>
+	 * Gets the corresponding packet id of the given class.<br>
 	 * If the given class is unregistered, the error code -404 will be returned.<br>
 	 *
-	 * @param clazz The corresponding packet class of the wanted packet id<br>
+	 * @param clazz The corresponding packet class of the wanted packet id
 	 * @return The packet id (id >= 0) or an error code (-404 = not found).
 	 */
 	public int getPacketId(Class<? extends Packet> clazz) {
 		Integer packetId = this.classToPacketId.get(clazz);
-		if(packetId != null) return packetId;
+		if (packetId != null) return packetId;
 		return -404;
 	}
 
 	/**
-	 * Gets the corresponding packet class of the given packet id. <br>
+	 * Gets the corresponding packet class of the given packet id.<br>
 	 * If the given packet id is unregistered/unknown, <i>null</i> will be returned.<br>
 	 *
-	 * @param packetId The corresponding packet id of the wanted class<br>
+	 * @param packetId The corresponding packet id of the wanted class
 	 * @return The packet class or null if there is no class for this id.
 	 */
 	public Class<? extends Packet> getPacketClass(int packetId) {
@@ -144,12 +141,12 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Creates a new instance of the corresponding class.<br>
+	 * Creates a new INSTANCE of the corresponding class.<br>
 	 *
-	 * @param packetId The packet id<br>
-	 * @param <T> The type of the packet<br>
-	 * @return A new instance of <i>T</i> or null if the packet is unknown.<br>
-	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.<br>
+	 * @param packetId The packet id
+	 * @param <T> The type of the packet
+	 * @return A new INSTANCE of <i>T</i> or null if the packet is unknown.
+	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
 	 */
 	public <T> T newInstance(int packetId) throws InstantiationException, IllegalAccessException {
@@ -157,16 +154,16 @@ public class PacketRegistry {
 	}
 
 	/**
-	 * Creates a new instance of the given class.<br>
+	 * Creates a new INSTANCE of the given class.
 	 *
-	 * @param clazz The packet class<br>
-	 * @param <T> The type of the packet defined by the given class<br>
-	 * @return A new instance of <i>T</i> or null if the given class is null.<br>
-	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.<br>
+	 * @param clazz The packet class
+	 * @param <T> The type of the packet defined by the given class
+	 * @return A new INSTANCE of <i>T</i> or null if the given class is null.
+	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
 	 */
 	public <T> T newInstance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
-		if(clazz == null) return null;
+		if (clazz == null) return null;
 		return clazz.newInstance();
 	}
 

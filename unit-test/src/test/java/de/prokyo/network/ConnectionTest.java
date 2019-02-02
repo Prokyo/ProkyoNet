@@ -37,7 +37,7 @@ public class ConnectionTest {
 	@Ignore("Takes to long. Can be started manually.")
 	@Test
 	public void testConnection() {
-		PacketRegistry.getInstance().register(PingPacket.class, 0x01);
+		PacketRegistry.INSTANCE.register(PingPacket.class, 0x01);
 
 		this.server = new ProkyoServer();
 		this.client = new ProkyoClient();

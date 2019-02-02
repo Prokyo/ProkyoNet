@@ -17,7 +17,7 @@ public class CompressionUtil {
 	private LZ4Decompressor lz4Decompressor;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @param type The type and strength of the compression
 	 */
@@ -27,6 +27,9 @@ public class CompressionUtil {
 				this.lz4Factory = LZ4Factory.fastestInstance();
 				this.lz4Compressor = this.lz4Factory.fastCompressor();
 				this.lz4Decompressor = this.lz4Factory.fastDecompressor();
+				break;
+
+			default:
 				break;
 		}
 	}

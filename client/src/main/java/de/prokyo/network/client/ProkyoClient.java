@@ -75,7 +75,7 @@ public class ProkyoClient implements Connection {
 
 		Bootstrap bootstrap = new Bootstrap()
 				.group(this.workerGroup)
-				.channel(epoll ? EpollSocketChannel.class :  NioSocketChannel.class)
+				.channel(epoll ? EpollSocketChannel.class : NioSocketChannel.class)
 				.handler(new ProkyoClientInitializer(this));
 
 		this.channel = bootstrap.connect(this.remoteHost).sync().channel();

@@ -49,8 +49,8 @@
 		<!-- Check imports -->
 		<module name="ImportOrder"/>
 		<module name="UnusedImports"/>
-		<module name="AvoidStarImports"/>
-		<module name="RedundantImports"/>
+		<module name="AvoidStarImport"/>
+		<module name="RedundantImport"/>
 		<module name="IllegalImport">
 			<property name="illegalPkgs" value="java.awt, java.sql, javafx, sun"/>
 		</module>
