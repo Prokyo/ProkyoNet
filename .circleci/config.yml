@@ -1,0 +1,28 @@
+version: 2.1
+
+workflows:
+  version: 2.1
+  build_and_test:
+    jobs:
+      - build
+      - test
+
+jobs:
+
+  build:
+    working_directory: ~/prokyo-prokyonet
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - run: mvn compile
+
+  test:
+    working_directory: ~/prokyo-prokyonet
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - run: 'mvn test'
+      - store_test_results:
+          path: target/surefire-reports

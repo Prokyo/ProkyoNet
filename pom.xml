@@ -113,6 +113,9 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
+					<!-- CircleCI build workaround -->
+					<reuseForks>true</reuseForks>
+					<useSystemClassLoader>false</useSystemClassLoader>
 					<workingDirectory>testDir/</workingDirectory>
 					<trimStackTrace>false</trimStackTrace>
 				</configuration>
