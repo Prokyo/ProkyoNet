@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class ProkyoCompressor extends MessageToMessageEncoder<ByteBuf> {
 
+	private static final int COMPRESSION_THRESHOLD = 128;
+
 	// #TODO: Should we compress the packet in {@link PacketEncoder} to generate a lower footprint?
 
 	@Override
@@ -24,16 +26,29 @@ public class ProkyoCompressor extends MessageToMessageEncoder<ByteBuf> {
 		original.resetReaderIndex();
 		int packetId = original.readInt();
 
-		byte[] rawData = new byte[original.readableBytes()];
+		int packetBytes = original.readableBytes();
+		byte[] rawData = new byte[packetBytes];
 		original.readBytes(rawData);
 
-		byte[] compressedData = CompressionUtil.getInstance().compress(rawData);
+		PacketBuffer buffer;
+		byte informationByte = 0;
+		if (packetBytes < COMPRESSION_THRESHOLD) {
+			buffer = new PacketBuffer(5 + packetBytes);
+			buffer.writeInt(packetId);
+			buffer.writeByte(informationByte);
+			buffer.writeBytes(rawData);
+		} else {
+			informationByte = 1;
 
-		PacketBuffer buffer = new PacketBuffer(6 + compressedData.length);
-		buffer.writeInt(packetId);
-		buffer.writeVarInt(rawData.length);
-		buffer.writeVarInt(compressedData.length);
-		buffer.writeBytes(compressedData);
+			byte[] compressedData = CompressionUtil.getInstance().compress(rawData);
+
+			buffer = new PacketBuffer(7 + compressedData.length);
+			buffer.writeInt(packetId);
+			buffer.writeByte(informationByte);
+			buffer.writeVarInt(rawData.length);
+			buffer.writeVarInt(compressedData.length);
+			buffer.writeBytes(compressedData);
+		}
 
 		out.add(buffer);
 	}

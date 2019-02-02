@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 public class CompressionPingPacket implements Packet {
 
 	private Sender sender;
-	@Getter private long time;
+	@Getter private byte[] data;
 
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(this.sender.ordinal());
-		buffer.writeLong(this.time);
+		buffer.writeByteArray(this.data);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class CompressionPingPacket implements Packet {
 		this.sender = Sender.fromId(buffer.readVarInt());
 		if (this.sender == Sender.CLIENT) CompressedConnectionTest.serverReceived = true;
 		else if (this.sender == Sender.SERVER) CompressedConnectionTest.clientReceived = true;
-		this.time = buffer.readLong();
+		this.data = buffer.readByteArray();
 	}
 
 	enum Sender {
