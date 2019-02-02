@@ -2,6 +2,8 @@ package de.prokyo.network;
 
 import de.prokyo.network.common.buffer.PacketBuffer;
 import java.nio.charset.Charset;
+
+import de.prokyo.network.common.compression.CompressionUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -76,6 +78,23 @@ public class PacketBufferTest {
 		buffer.writeString(text, Charset.forName("UTF-8"));
 
 		Assert.assertEquals(text, buffer.readString(Charset.forName("UTF-8")));
+	}
+
+	/**
+	 * Tests the compression and decompression of input data using our {@link PacketBuffer}s methods.
+	 */
+	@Test
+	public void testCompressionAndDecompression() {
+		String text = "This text will be compressed and decompressed by our PacketBuffer! yeah :D";
+		byte[] original = text.getBytes();
+
+		CompressionUtil.init(CompressionUtil.CompressionType.LZ4_FASTEST);
+
+		PacketBuffer buffer = new PacketBuffer();
+
+		buffer.compressAndWriteByteArray(original);
+
+		Assert.assertArrayEquals(original, buffer.readAndDecompress());
 	}
 
 }

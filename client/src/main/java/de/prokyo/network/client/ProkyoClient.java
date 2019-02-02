@@ -3,6 +3,8 @@ package de.prokyo.network.client;
 import de.prokyo.network.common.connection.Connection;
 import de.prokyo.network.common.event.EventManager;
 import de.prokyo.network.common.packet.Packet;
+import de.prokyo.network.common.pipeline.ProkyoCompressor;
+import de.prokyo.network.common.pipeline.ProkyoDecompressor;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -27,6 +29,22 @@ public class ProkyoClient implements Connection {
 	private EventLoopGroup workerGroup;
 	private boolean connected;
 
+	/**
+	 * Add the {@link ProkyoCompressor} and the {@link ProkyoDecompressor} to the channel pipeline.
+	 */
+	public void enableCompression() {
+		this.channel.pipeline()
+				.addBefore("prokyoEncoder", "prokyoCompressor", new ProkyoCompressor())
+				.addBefore("prokyoDecoder", "prokyoDecompressor", new ProkyoDecompressor());
+	}
+
+	/**
+	 * Removes the {@link ProkyoCompressor} and the {@link ProkyoDecompressor} from the channel pipeline.
+	 */
+	public void disableCompression() {
+		this.channel.pipeline().remove(ProkyoCompressor.class);
+		this.channel.pipeline().remove(ProkyoDecompressor.class);
+	}
 
 	/**
 	 * Connects to the given host and port with given amount of threads.<br>
