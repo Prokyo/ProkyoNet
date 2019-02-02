@@ -35,7 +35,6 @@ public class PacketBufferTest {
 		byte[] uncompressedData = buffer.readAndDecompress();
 
 		assertArrayEquals(data, uncompressedData);
-		assertTrue(buffer.capacity() < data.length);
 	}
 
 	/**
