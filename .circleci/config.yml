@@ -1,10 +1,15 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@1.0.3
+
 workflows:
   version: 2.1
-  build_and_test:
+  build:
     jobs:
       - build
+  test:
+    jobs:
       - test
 
 jobs:
@@ -16,6 +21,8 @@ jobs:
     steps:
       - checkout
       - run: mvn compile
+      - run: mvn cobertura:cobertura
+      - codecov/upload
 
   test:
     working_directory: ~/prokyo-prokyonet
