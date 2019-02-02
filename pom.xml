@@ -130,6 +130,7 @@
 						<format>xml</format>
 					</formats>
 					<check/>
+					<aggregate>true</aggregate>
 				</configuration>
 			</plugin>
 		</plugins>
