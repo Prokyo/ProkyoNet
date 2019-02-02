@@ -5,6 +5,9 @@ orbs:
 
 workflows:
   version: 2.1
+  checkstyle:
+    jobs:
+      - checkstyle
   build:
     jobs:
       - build
@@ -13,6 +16,14 @@ workflows:
       - test
 
 jobs:
+
+  checkstyle:
+    working_directory: ~/prokyo-prokyonet
+    docker:
+    - image: circleci/openjdk:8-jdk-stretch
+    steps:
+    - checkout
+    - run: mvn compile checkstyle:check -Dmaven.main.skip=true -Dcheckstyle.config.location=checkstyle.xml
 
   build:
     working_directory: ~/prokyo-prokyonet
