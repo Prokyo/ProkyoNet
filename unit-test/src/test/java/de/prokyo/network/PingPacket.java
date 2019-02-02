@@ -3,6 +3,7 @@ package de.prokyo.network;
 import de.prokyo.network.common.buffer.PacketBuffer;
 import de.prokyo.network.common.packet.Packet;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,10 +14,12 @@ import lombok.NoArgsConstructor;
 public class PingPacket implements Packet {
 
 	private Sender sender;
+	@Getter private long time;
 
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeVarInt(this.sender.ordinal());
+		buffer.writeLong(this.time);
 	}
 
 	@Override
@@ -24,6 +27,7 @@ public class PingPacket implements Packet {
 		this.sender = Sender.fromId(buffer.readVarInt());
 		if (this.sender == Sender.CLIENT) ConnectionTest.serverReceived = true;
 		else if (this.sender == Sender.SERVER) ConnectionTest.clientReceived = true;
+		this.time = buffer.readLong();
 	}
 
 	enum Sender {

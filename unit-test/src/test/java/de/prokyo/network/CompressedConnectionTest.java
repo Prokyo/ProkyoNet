@@ -8,6 +8,7 @@ import de.prokyo.network.server.ClientConnection;
 import de.prokyo.network.server.ProkyoServer;
 import de.prokyo.network.server.event.ConnectionEstablishedEvent;
 import de.prokyo.network.server.event.ServerStartEvent;
+import java.util.Random;
 import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -20,15 +21,23 @@ import java.util.concurrent.Executors;
  */
 public class CompressedConnectionTest {
 
+	private static final byte[] DATA = new byte[512];
+
 	static boolean serverReceived = false;
 	static boolean clientReceived = false;
+
+	static {
+		Random random = new Random();
+
+		for (int n = 0; n < DATA.length; n++) {
+			DATA[n] = (byte) random.nextInt();
+		}
+	}
 
 	private ProkyoServer server;
 	private ProkyoClient client;
 	private ClientConnection clientConnection;
 	private ExecutorService executor = Executors.newFixedThreadPool(2);
-
-	private long time;
 
 	private final Object lock = new Object();
 
@@ -92,8 +101,7 @@ public class CompressedConnectionTest {
 	public void onServerConnectionEstablished(ConnectionEstablishedEvent event) {
 		this.clientConnection = event.getClientConnection();
 		this.clientConnection.enableCompression();
-		this.time = System.currentTimeMillis();
-		this.client.sendPacket(new CompressionPingPacket(CompressionPingPacket.Sender.CLIENT, this.time));
+		this.client.sendPacket(new CompressionPingPacket(CompressionPingPacket.Sender.CLIENT, DATA));
 	}
 
 	public void onClientConnectionEstablished(de.prokyo.network.client.event.ConnectionEstablishedEvent event) {
@@ -101,11 +109,11 @@ public class CompressedConnectionTest {
 	}
 
 	public void onClientPing(CompressionPingPacket packet) {
-		this.clientConnection.sendPacket(new CompressionPingPacket(CompressionPingPacket.Sender.SERVER, packet.getTime()));
+		this.clientConnection.sendPacket(new CompressionPingPacket(CompressionPingPacket.Sender.SERVER, DATA));
 	}
 
 	public void onServerPing(CompressionPingPacket packet) {
-		Assert.assertEquals(this.time, packet.getTime());
+		Assert.assertArrayEquals(DATA, packet.getData());
 		synchronized (this.lock) {
 			this.lock.notifyAll();
 		}

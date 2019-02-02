@@ -28,6 +28,8 @@ public class ConnectionTest {
 
 	private final Object lock = new Object();
 
+	private long time = System.currentTimeMillis();
+
 	/**
 	 * Starts a server and a client and sends a packet from the client to the server. If the packet is successfully decoded from the server the test passes.
 	 *
@@ -82,14 +84,15 @@ public class ConnectionTest {
 
 	public void onServerConnectionEstablished(ConnectionEstablishedEvent event) {
 		this.clientConnection = event.getClientConnection();
-		this.client.sendPacket(new PingPacket(PingPacket.Sender.CLIENT));
+		this.client.sendPacket(new PingPacket(PingPacket.Sender.CLIENT, this.time));
 	}
 
 	public void onClientPing(PingPacket packet) {
-		this.clientConnection.sendPacket(new PingPacket(PingPacket.Sender.SERVER));
+		this.clientConnection.sendPacket(new PingPacket(PingPacket.Sender.SERVER, this.time));
 	}
 
 	public void onServerPing(PingPacket packet) {
+		Assert.assertEquals(this.time, packet.getTime());
 		synchronized (this.lock) {
 			this.lock.notifyAll();
 		}

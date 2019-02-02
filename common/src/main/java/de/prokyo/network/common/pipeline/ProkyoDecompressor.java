@@ -20,17 +20,26 @@ public class ProkyoDecompressor extends MessageToMessageDecoder<ByteBuf> {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
 		PacketBuffer original = new PacketBuffer(msg);
 		int packetId = original.readInt();
+		byte informationByte = original.readByte();
 
-		int uncompressedSize = original.readVarInt();
-		int compressedDataLength = original.readVarInt();
-		byte[] compressedData = new byte[compressedDataLength];
-		original.readBytes(compressedData);
+		PacketBuffer buffer;
+		if (informationByte == 0) {
+			buffer = new PacketBuffer(4 + original.readableBytes());
+			original.writerIndex(original.readerIndex());
+			buffer.writeInt(packetId);
+			buffer.writeBytes(original);
+		} else {
+			int uncompressedSize = original.readVarInt();
+			int compressedDataLength = original.readVarInt();
+			byte[] compressedData = new byte[compressedDataLength];
+			original.readBytes(compressedData);
 
-		byte[] uncompressedData = CompressionUtil.getInstance().decompress(compressedData, uncompressedSize);
+			byte[] uncompressedData = CompressionUtil.getInstance().decompress(compressedData, uncompressedSize);
 
-		PacketBuffer buffer = new PacketBuffer(4 + uncompressedSize);
-		buffer.writeInt(packetId);
-		buffer.writeBytes(uncompressedData);
+			buffer = new PacketBuffer(4 + uncompressedSize);
+			buffer.writeInt(packetId);
+			buffer.writeBytes(uncompressedData);
+		}
 
 		out.add(buffer);
 	}
