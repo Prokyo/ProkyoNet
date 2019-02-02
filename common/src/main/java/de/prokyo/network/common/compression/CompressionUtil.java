@@ -76,6 +76,9 @@ public class CompressionUtil {
 		CompressionUtil.instance = new CompressionUtil(type);
 	}
 
+	/**
+	 * The {@link CompressionType} defines the strength and type of the compression.
+	 */
 	public enum CompressionType {
 		LZ4_FASTEST
 	}
