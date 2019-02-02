@@ -1,4 +1,5 @@
 # ProkyoNet
+[![codecov](https://codecov.io/gh/Prokyo/ProkyoNet/branch/develop/graph/badge.svg)](https://codecov.io/gh/Prokyo/ProkyoNet)
 
 ProkyoNet is a wrapper for Netty providing a simple and high performance API.
 
