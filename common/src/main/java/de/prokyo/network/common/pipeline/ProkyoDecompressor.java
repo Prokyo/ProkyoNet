@@ -7,6 +7,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import java.util.List;
 
+/**
+ * Decompresses the incoming packets.
+ * This implementation creates the following footprint:
+ * 		compressedDataLength (compressedData)
+ * 		uncompressedSize (uncompressedData)
+ * 		4 (packetId) + uncompressedSize -> buffer
+ */
 public class ProkyoDecompressor extends MessageToMessageDecoder<ByteBuf> {
 
 	@Override

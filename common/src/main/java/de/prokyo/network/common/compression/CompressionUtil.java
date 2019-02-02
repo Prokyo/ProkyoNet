@@ -5,6 +5,9 @@ import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Decompressor;
 import net.jpountz.lz4.LZ4Factory;
 
+/**
+ * Represents a util for compressing and decompressing generic data.
+ */
 public class CompressionUtil {
 
 	@Getter private static CompressionUtil instance;
@@ -13,6 +16,11 @@ public class CompressionUtil {
 	private LZ4Compressor lz4Compressor;
 	private LZ4Decompressor lz4Decompressor;
 
+	/**
+	 * Constructor
+	 *
+	 * @param type The type and strength of the compression
+	 */
 	public CompressionUtil(CompressionType type) {
 		switch (type) {
 			case LZ4_FASTEST:
