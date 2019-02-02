@@ -1,10 +1,10 @@
 package de.prokyo.network.server;
 
 import de.prokyo.network.common.event.OutgoingPacketEvent;
+import de.prokyo.network.common.event.PacketIncomingEvent;
 import de.prokyo.network.common.packet.Packet;
 import de.prokyo.network.server.event.ConnectionClosedEvent;
 import de.prokyo.network.server.event.ConnectionEstablishedEvent;
-import de.prokyo.network.common.event.PacketIncomingEvent;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;

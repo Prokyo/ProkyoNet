@@ -6,13 +6,13 @@ package de.prokyo.network.common.exception;
 public class EncodingException extends RuntimeException {
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public EncodingException() {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @param msg The message containing important information for the user
 	 */
@@ -21,7 +21,7 @@ public class EncodingException extends RuntimeException {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @param msg The message containing important information for the user<br>
 	 * @param throwable The original throwable instance this exception will be a wrapper for

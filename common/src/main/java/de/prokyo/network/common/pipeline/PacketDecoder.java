@@ -20,11 +20,11 @@ public class PacketDecoder extends ByteToMessageDecoder {
 		PacketBuffer buffer = new PacketBuffer(in);
 
 		int packetId = buffer.readInt();
-		if(packetId < 0 && !PacketRegistry.getInstance().isReservedPacket(packetId))
+		if (packetId < 0 && !PacketRegistry.INSTANCE.isReservedPacket(packetId))
 			throw new DecodingException("A packet id can't be lower than zero.");
 
-		Packet packet = PacketRegistry.getInstance().newInstance(packetId);
-		if(packet == null) throw new DecodingException("Unknown packet id: " + packetId);
+		Packet packet = PacketRegistry.INSTANCE.newInstance(packetId);
+		if (packet == null) throw new DecodingException("Unknown packet id: " + packetId);
 
 		packet.decode(buffer);
 
