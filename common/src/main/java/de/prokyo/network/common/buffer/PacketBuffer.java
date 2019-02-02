@@ -1,5 +1,6 @@
 package de.prokyo.network.common.buffer;
 
+import de.prokyo.network.common.compression.CompressionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -50,6 +51,44 @@ public class PacketBuffer extends ByteBuf {
 	 */
 	public PacketBuffer(ByteBuf buffer) {
 		this.buffer = buffer;
+	}
+
+	/**
+	 * Compresses the given <i>uncompressedData</i> and writes the compressed data to the buffer including<br>
+	 * the uncompressed size.<br>
+	 * First we write the uncompressed size as a VarInt followed by the size of the compressed data as a VarInt.<br>
+	 * After these initial values the compressed data will be written to the buffer.<br>
+	 *
+	 * The {@link CompressionUtil} has to be initialized before calling this method - otherwise u will get a NPE.
+	 *
+	 * @param uncompressedData The uncompressed data
+	 * @return This
+	 * @see CompressionUtil#compress(byte[])
+	 * @see PacketBuffer#writeVarInt(int)
+	 * @see PacketBuffer#writeByteArray(byte[])
+	 */
+	public PacketBuffer compressAndWriteByteArray(byte[] uncompressedData) {
+		byte[] compressedData = CompressionUtil.getInstance().compress(uncompressedData);
+		this.writeVarInt(uncompressedData.length);
+		this.writeByteArray(compressedData);
+		return this;
+	}
+
+	/**
+	 * Reads the initial values written by {@link PacketBuffer#compressAndWriteByteArray(byte[])}, reads the compressed<br>
+	 * data, decompresses the compressed data and returns the uncompressed data.<br>
+	 *
+	 * The {@link CompressionUtil} has to be initialized before calling this method - otherwise u will get a NPE.
+	 *
+	 * @return The uncompressed data
+	 * @see PacketBuffer#readVarInt()
+	 * @see PacketBuffer#readByteArray()
+	 * @see CompressionUtil#decompress(byte[], int)
+	 * @see PacketBuffer#compressAndWriteByteArray(byte[])
+	 */
+	public byte[] readAndDecompress() {
+		int uncompressedSize = this.readVarInt();
+		return CompressionUtil.getInstance().decompress(this.readByteArray(), uncompressedSize);
 	}
 
 	/**
