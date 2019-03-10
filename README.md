@@ -5,10 +5,35 @@
 [![CircleCI](https://circleci.com/gh/Prokyo/ProkyoNet/tree/develop.svg?style=svg)](https://circleci.com/gh/Prokyo/ProkyoNet/tree/develop)
 [![CircleCI](https://circleci.com/gh/Prokyo/ProkyoNet/tree/master.svg?style=svg)](https://circleci.com/gh/Prokyo/ProkyoNet/tree/master)
 
-
 ProkyoNet is a wrapper for Netty providing a simple and high performance API.
 
-### License
+## Getting started
+
+ProkyoNet is well documented in our [Github wiki](https://github.com/Prokyo/ProkyoNet/wiki).
+
+## Maven
+
+Build `ProkyoNet` once so you have this dependency in your local maven repository and can then use it in your maven projects.
+
+**ProkyoServer**
+```xml
+<dependency>
+	<groupId>de.prokyo.network</groupId>
+	<artifactId>prokyo-net-server</artifactId>
+	<version>0.1</version>
+</dependency>
+```
+
+**ProkyoClient**
+```xml
+<dependency>
+	<groupId>de.prokyo.network</groupId>
+	<artifactId>prokyo-net-client</artifactId>
+	<version>0.1</version>
+</dependency>
+```
+
+## License
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 MIT License
