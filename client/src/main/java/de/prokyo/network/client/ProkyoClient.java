@@ -2,6 +2,8 @@ package de.prokyo.network.client;
 
 import de.prokyo.network.common.connection.Connection;
 import de.prokyo.network.common.event.EventManager;
+import de.prokyo.network.common.handler.ProkyoTimeOutHandler;
+import de.prokyo.network.common.packet.KeepAlivePacket;
 import de.prokyo.network.common.packet.Packet;
 import de.prokyo.network.common.pipeline.ProkyoCompressor;
 import de.prokyo.network.common.pipeline.ProkyoDecompressor;
@@ -14,7 +16,9 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
+
 import java.net.InetSocketAddress;
+
 import lombok.Getter;
 
 /**
@@ -23,9 +27,11 @@ import lombok.Getter;
 public class ProkyoClient implements Connection {
 
 	public static final AttributeKey<ProkyoClient> ATTRIBUTE_KEY = AttributeKey.newInstance("prokyoClient");
-	@Getter private final EventManager eventManager = new EventManager();
+	@Getter
+	private final EventManager eventManager = new EventManager();
 	private Channel channel;
-	@Getter private InetSocketAddress remoteHost;
+	@Getter
+	private InetSocketAddress remoteHost;
 	private EventLoopGroup workerGroup;
 	private boolean connected;
 
@@ -63,8 +69,8 @@ public class ProkyoClient implements Connection {
 	 * Connects to the given host and port with given amount of threads.<br>
 	 * This method <b>will block</b> the current thread.
 	 *
-	 * @param host The remote host
-	 * @param port The port of the remote server
+	 * @param host    The remote host
+	 * @param port    The port of the remote server
 	 * @param threads The amount of threads netty should use
 	 * @throws InterruptedException If the thread is interrupted by another thread.
 	 */

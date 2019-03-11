@@ -50,7 +50,7 @@ public class PacketRegistry {
 	/**
 	 * Registers the given packet including its class and packet id.
 	 *
-	 * @param clazz The class of the packet
+	 * @param clazz    The class of the packet
 	 * @param packetId The packet id
 	 */
 	public void register(Class<? extends Packet> clazz, Integer packetId) {
@@ -63,7 +63,7 @@ public class PacketRegistry {
 	/**
 	 * Registers the given packet including its class and packet id without validating the arguments.
 	 *
-	 * @param clazz The class of the packet
+	 * @param clazz    The class of the packet
 	 * @param packetId The packet id
 	 */
 	private void registerPacket(Class<? extends Packet> clazz, Integer packetId) {
@@ -144,7 +144,7 @@ public class PacketRegistry {
 	 * Creates a new INSTANCE of the corresponding class.<br>
 	 *
 	 * @param packetId The packet id
-	 * @param <T> The type of the packet
+	 * @param <T>      The type of the packet
 	 * @return A new INSTANCE of <i>T</i> or null if the packet is unknown.
 	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
@@ -157,7 +157,7 @@ public class PacketRegistry {
 	 * Creates a new INSTANCE of the given class.
 	 *
 	 * @param clazz The packet class
-	 * @param <T> The type of the packet defined by the given class
+	 * @param <T>   The type of the packet defined by the given class
 	 * @return A new INSTANCE of <i>T</i> or null if the given class is null.
 	 * @throws InstantiationException If the class is abstract, an interface or has no (visible) zero args constructor.
 	 * @throws IllegalAccessException If the class or it's zero args constructor is not accessible.
