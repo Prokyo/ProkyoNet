@@ -4,10 +4,13 @@ import de.prokyo.network.client.event.ConnectionClosedEvent;
 import de.prokyo.network.client.event.ConnectionEstablishedEvent;
 import de.prokyo.network.common.event.OutgoingPacketEvent;
 import de.prokyo.network.common.event.PacketIncomingEvent;
+import de.prokyo.network.common.packet.KeepAlivePacket;
 import de.prokyo.network.common.packet.Packet;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -32,6 +35,8 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		if (!(msg instanceof Packet)) return;
 
+		System.out.println(msg.getClass().getSimpleName());
+
 		try {
 			this.prokyoClient.getEventManager().fire((Packet) msg);
 			this.prokyoClient.getEventManager().fire(new PacketIncomingEvent((Packet) msg, this.prokyoClient));
@@ -50,5 +55,4 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 			super.write(ctx, msg, promise);
 		}
 	}
-
 }
