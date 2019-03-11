@@ -11,6 +11,17 @@ ProkyoNet is a wrapper for Netty providing a simple and high performance API.
 
 ProkyoNet is well documented in our [Github wiki](https://github.com/Prokyo/ProkyoNet/wiki).
 
+## Features overview
+
+- [x] TCP packets
+- [x] Compression
+- [ ] UDP packets
+- [ ] HTTP/1.1
+- [ ] HTTP/2
+- [ ] QUIC
+- [ ] Encryption (PGP)
+- [ ] Statistics
+
 ## Maven
 
 Build `ProkyoNet` once so you have this dependency in your local maven repository and can then use it in your maven projects.
