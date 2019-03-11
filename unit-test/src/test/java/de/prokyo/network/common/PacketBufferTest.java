@@ -1,16 +1,56 @@
-package de.prokyo.network;
+package de.prokyo.network.common;
 
 import de.prokyo.network.common.buffer.PacketBuffer;
 import java.nio.charset.Charset;
-
 import de.prokyo.network.common.compression.CompressionUtil;
+import io.netty.buffer.Unpooled;
 import org.junit.Assert;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for the packet buffer.
  */
 public class PacketBufferTest {
+
+	@Test
+	public void testByteArrayOperation() {
+		final byte[] data = "This is a test string".getBytes();
+		PacketBuffer buffer = new PacketBuffer();
+
+		buffer.writeByteArray(data);
+		assertArrayEquals(data, buffer.readByteArray());
+	}
+
+	/**
+	 * Tests compressing and decompressing data.
+	 */
+	@Test
+	public void testCompression() {
+		PacketBuffer buffer = new PacketBuffer();
+		final byte[] data = new byte[512];
+		for(int i = 0; i < data.length; i++) data[i] = (byte) i;
+
+		buffer.compressAndWriteByteArray(data);
+		byte[] uncompressedData = buffer.readAndDecompress();
+
+		assertArrayEquals(data, uncompressedData);
+	}
+
+	/**
+	 * Tests the constructors of PacketBuffer.
+	 */
+	@Test
+	public void testConstructors() {
+		PacketBuffer buffer = new PacketBuffer();
+		assertEquals(4, buffer.capacity());
+
+		buffer = new PacketBuffer(11);
+		assertEquals(11, buffer.capacity());
+
+		buffer = new PacketBuffer(Unpooled.buffer(5));
+		assertEquals(5, buffer.capacity());
+	}
 
 	/**
 	 * Tests the writing and reading of a varint.
