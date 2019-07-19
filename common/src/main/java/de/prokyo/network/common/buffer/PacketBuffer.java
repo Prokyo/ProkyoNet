@@ -1236,9 +1236,31 @@ public class PacketBuffer extends ByteBuf {
 		return this.buffer.hasArray();
 	}
 
+	/**
+	 * Returns the data this buffer contains.<br/>
+	 *
+	 * This method creates a new byte array and writes the data into the byte array.<br/>
+	 * The reader index won't change.
+	 *
+	 * @see {{@link ByteBuf#array()}}
+	 * @return The data this buffer contains
+	 */
 	@Override
 	public byte[] array() {
-		return this.buffer.array();
+		// workaround by prokyo - direct buffers sometimes don't support array()
+
+		// save the original reader index to 'pointer' and set the readerIndex of the buffer to the start
+		int pointer = this.readerIndex();
+		this.buffer.readerIndex(0);
+
+		// read all available bytes
+		byte[] data = new byte[this.readableBytes()];
+		this.readBytes(data);
+
+		// reset the reader index to the previous pointer
+		this.buffer.readerIndex(pointer);
+
+		return data;
 	}
 
 	@Override
