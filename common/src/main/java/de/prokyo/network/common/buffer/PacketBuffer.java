@@ -1237,13 +1237,13 @@ public class PacketBuffer extends ByteBuf {
 	}
 
 	/**
-	 * Returns the data this buffer contains.<br/>
+	 * Returns the data this buffer contains.
 	 *
-	 * This method creates a new byte array and writes the data into the byte array.<br/>
-	 * The reader index won't change.
+	 * <p>This method creates a new byte array and writes the data into the byte array.<br/>
+	 * The reader index won't change.</p>
 	 *
-	 * @see {{@link ByteBuf#array()}}
-	 * @return The data this buffer contains
+	 * @see ByteBuf#array()
+	 * @return the data this buffer contains
 	 */
 	@Override
 	public byte[] array() {
