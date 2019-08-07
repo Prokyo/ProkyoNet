@@ -51,5 +51,4 @@ public class ProkyoDuplexHandler extends ChannelDuplexHandler {
 			super.write(ctx, msg, promise);
 		}
 	}
-
 }
