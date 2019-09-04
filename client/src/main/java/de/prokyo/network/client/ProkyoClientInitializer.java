@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 
@@ -15,19 +16,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProkyoClientInitializer extends ChannelInitializer {
 
-	private final ProkyoClient client;
+    private final ProkyoClient client;
 
-	@Override
-	protected void initChannel(Channel channel) throws Exception {
-		channel.pipeline()
-				.addLast("timeout", new ReadTimeoutHandler(30))
-				.addLast("frame-decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
-				.addLast("prokyoDecoder", new PacketDecoder())
-				.addLast("frame-prepender", new LengthFieldPrepender(4))
-				.addLast("prokyoEncoder", new PacketEncoder())
-				.addLast("prokyoPacketHandler", new ProkyoDuplexHandler(this.client));
+    @Override
+    protected void initChannel(Channel channel) throws Exception {
+        channel.pipeline()
+                .addLast("idleStateHandler", new IdleStateHandler(0, 25, 0))
+                .addLast("timeout", new ReadTimeoutHandler(30))
+                .addLast("frame-decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
+                .addLast("prokyoDecoder", new PacketDecoder())
+                .addLast("frame-prepender", new LengthFieldPrepender(4))
+                .addLast("prokyoEncoder", new PacketEncoder())
+                .addLast("prokyoPacketHandler", new ProkyoDuplexHandler(this.client));
 
-		channel.attr(ProkyoClient.ATTRIBUTE_KEY).set(this.client);
-	}
+        channel.attr(ProkyoClient.ATTRIBUTE_KEY).set(this.client);
+    }
 
 }
